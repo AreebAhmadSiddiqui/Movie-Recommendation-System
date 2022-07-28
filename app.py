@@ -6,7 +6,7 @@ import requests
 
 def recommender(new_movies, movie_name):
 
-    similarity = pickle.load(open('./models/similarity.pkl', 'rb'))
+    similarity = pickle.load(open('similarity.pkl', 'rb'))
     movie_index = new_movies[new_movies['title'] == movie_name].index[0]
 
     distances = similarity[movie_index]
@@ -27,7 +27,7 @@ def recommender(new_movies, movie_name):
 
 def main():
 
-    movie_dict = pickle.load(open('./models/movies.pkl', 'rb'))
+    movie_dict = pickle.load(open('movies.pkl', 'rb'))
     movies = pd.DataFrame(movie_dict)
     st.title('Watch Them')
     selected_movie = st.selectbox(
