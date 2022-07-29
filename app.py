@@ -2,11 +2,20 @@ import streamlit as st
 import pickle
 import pandas as pd
 import requests
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
+
+def get_similarity_matrix():
+    new_movies=pd.read_csv('./datasets/cleaned_movies.csv')
+    cv=CountVectorizer(max_features=5000,stop_words='english')
+    vectors=cv.fit_transform(new_movies['tags']).toarray()
+    similarity=cosine_similarity(vectors)
+    return similarity
 
 def recommender(new_movies, movie_name):
 
-    similarity = pickle.load(open('similarity.pkl', 'rb'))
+    similarity = get_similarity_matrix()
     movie_index = new_movies[new_movies['title'] == movie_name].index[0]
 
     distances = similarity[movie_index]
@@ -27,8 +36,7 @@ def recommender(new_movies, movie_name):
 
 def main():
 
-    movie_dict = pickle.load(open('movies.pkl', 'rb'))
-    movies = pd.DataFrame(movie_dict)
+    movies= pd.read_csv('./datasets/tmdb_5000_movies.csv')
     st.title('Watch Them')
     selected_movie = st.selectbox(
         'Select your movie', movies['title'].values)
